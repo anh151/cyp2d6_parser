@@ -4,3 +4,4 @@ build/
 cyp2d6_parser.egg-info/
 .DS_Store
 test.ipynb
+*.tsv

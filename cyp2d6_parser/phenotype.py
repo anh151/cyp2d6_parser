@@ -51,8 +51,6 @@ class CYP2D6Phenotype:
 def assign_activity(genotype):
     if genotype == "Indeterminate/Indeterminate":
         return "n/a"
-    elif genotype is np.nan:
-        return np.nan
     total_activity = 0
     na_activity = False
     allele_to_activity = _get_allele_activity()
@@ -90,7 +88,7 @@ def assign_phenotype(activity_score):
 
 
 def _get_allele_activity():
-    allele_fxn = pd.read_csv(ALLELE_FXN_PATH, comment="#")
+    allele_fxn = pd.read_csv(ALLELE_FXN_PATH, comment="#", keep_default_na=False)
 
     allele_to_activity = allele_fxn.set_index("allele").to_dict()["activity_score"]
     allele_to_activity["Indeterminate"] = "n/a"

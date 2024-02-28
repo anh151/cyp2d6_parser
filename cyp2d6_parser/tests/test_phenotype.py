@@ -1,5 +1,5 @@
 import unittest
-from cyp2d6_parser import phenotype
+from cyp2d6_parser import phenotype, parser
 
 
 class TestPhenotype(unittest.TestCase):
@@ -20,6 +20,13 @@ class TestPhenotype(unittest.TestCase):
         )
         self.assertEqual(result.activity_score, "n/a")
         self.assertEqual(result.phenotype, "CYP2D6 Indeterminate Metabolizer")
+
+        # Ensure that the allele_fxn.csv is being parsed correctly
+        result = parser.parse_genotype(genotype="*28/*68+*4", caller="pypgx")
+        self.assertEqual(
+            result.loc[0, "activity_score"], "CYP2D6 Activity Score >= 0.0"
+        )
+        self.assertEqual(result.loc[0, "phenotype"], "CYP2D6 Indeterminate Metabolizer")
 
     def test_phenotype_with_possible_genotypes(self):
         result = phenotype.CYP2D6Phenotype(

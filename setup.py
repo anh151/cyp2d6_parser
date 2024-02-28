@@ -4,7 +4,7 @@ long_description = open("README.md").read()
 
 setup(
     name="cyp2d6_parser",
-    version="2.0.1",
+    version="2.0.2",
     description="Parser to match CYP2D6 parsing reccomendations by PharmVar.",
     author="Andrew Haddad, PharmD",
     author_email="andrew.haddad@pitt.edu",

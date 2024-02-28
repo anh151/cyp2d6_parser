@@ -23,13 +23,13 @@ class CYP2D6Data:
     ):
         self.sample_id = sample_id
         self.cyrius_filter = cyrius_filter
-        self.caller = caller
+        self.caller = caller.lower() if caller is not None else None
         self.stellarpgx_flag = stellarpgx_flag
         self.genotype_data = CYP2D6Genotype(
             genotypes_raw=genotypes_raw,
             stellarpgx_flag=stellarpgx_flag,
             mask_retired_alleles=mask_retired_alleles,
-            caller=caller,
+            caller=self.caller,
         )
         self.phenotype_data = CYP2D6Phenotype(
             genotype=self.genotype_data.genotype,

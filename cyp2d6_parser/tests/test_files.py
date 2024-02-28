@@ -15,7 +15,7 @@ class TestFiles(unittest.TestCase):
 
     def test_cyrius(self):
         results = parser.parse_genotype(
-            file=os.path.join(PATH, "test_files", "cyrius.tsv"), caller="cyrius"
+            file=os.path.join(PATH, "test_files", "cyrius.tsv"), caller="Cyrius"
         )
         self.assertEqual(results.loc[0, "genotype"], "*1/*4")
 
