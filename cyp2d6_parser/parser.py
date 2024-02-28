@@ -37,7 +37,7 @@ def parse_genotype(
             validate_genotype(geno)
             genotype_result = CYP2D6Data(
                 genotypes_raw=[geno],
-                caller=caller,
+                caller=caller.lower(),
                 mask_retired_alleles=mask_retired_alleles,
             )
             genotype_results.append(genotype_result)
@@ -71,7 +71,8 @@ def parse_genotype(
 
 def get_activity_score(genotype, caller=None):
     validate_genotype(genotype)
-    genotype_results = CYP2D6Data([genotype], caller=caller)
+    validate_caller(caller)
+    genotype_results = CYP2D6Data([genotype], caller=caller.lower())
     return genotype_results.phenotype_data.activity_score
 
 
@@ -82,6 +83,7 @@ def get_phenotype(genotype=None, activity_score=None, caller=None):
         )
     if genotype:
         validate_genotype(genotype)
+        validate_caller(caller)
         genotype_results = CYP2D6Data([genotype], caller=caller)
         return genotype_results.phenotype_data.phenotype
     elif activity_score:

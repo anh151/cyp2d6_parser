@@ -1,4 +1,5 @@
 import csv
+import io
 import os
 import re
 import zipfile
@@ -39,7 +40,7 @@ class CYP2D6Data:
 
     @classmethod
     def from_cyrius(cls, file, mask_retired_alleles=True):
-        caller = "Cyrius"
+        caller = "cyrius"
         with open(file) as f:
             csv_reader = csv.reader(f, delimiter="\t")
             for i, line in enumerate(csv_reader):
@@ -57,14 +58,12 @@ class CYP2D6Data:
 
     @classmethod
     def from_aldy(cls, file, mask_retired_alleles=True):
-        caller = "Aldy"
+        caller = "aldy"
         with open(file) as f:
-            if sample_id is None:
-                sample_id = os.path.basename(file)
             csv_reader = csv.reader(f, delimiter="\t")
             genotypes_raw = set()
-            for line in csv_reader:
-                if line[0] == sample_id:
+            for i, line in enumerate(csv_reader):
+                if i > 1:
                     genotype = line[3]
                     genotypes_raw.add(genotype)
         if os.path.getsize(file) == 0:
@@ -82,12 +81,15 @@ class CYP2D6Data:
 
     @classmethod
     def from_pypgx(cls, file, mask_retired_alleles=True):
-        caller = "PyPGx"
+        caller = "pypgx"
         with zipfile.ZipFile(file, "r") as f_zip:
-            for file in f_zip.filelist:
-                if "data" in file.filename:
-                    with f_zip.open(file, "r") as f:
-                        csv_reader = csv.reader(f, delimiter="\t")
+            for data_file in f_zip.filelist:
+                if "data.tsv" in data_file.filename:
+                    with f_zip.open(data_file, "r") as f:
+                        csv_reader = csv.reader(
+                            io.TextIOWrapper(f, encoding="UTF-8", newline=""),
+                            delimiter="\t",
+                        )
                         for i, line in enumerate(csv_reader):
                             if i == 1:
                                 genotype_raw = line[1]
@@ -100,12 +102,12 @@ class CYP2D6Data:
 
     @classmethod
     def from_stargazer(cls, file, mask_retired_alleles=True):
-        caller = "Stargazer"
+        caller = "stargazer"
         pass
 
     @classmethod
     def from_stellarpgx(cls, file, mask_retired_alleles=True):
-        caller = "StellarPGx"
+        caller = "stellarpgx"
         stellarpgx_flag = None
         with open(file) as f:
             csv_reader = csv.reader(f)
@@ -286,12 +288,12 @@ class CYP2D6Genotype:
         genotypes_raw = self.genotypes_raw
         genotypes_raw = self.adjust_xn_genotypes(genotypes_raw)
         genotypes = set()
-        if self.caller == "Cyrius":
+        if self.caller == "cyrius":
             genotypes_raw = self.adjust_cyrius_slash_genotype(genotypes_raw)
         for genotype in genotypes_raw:
             if self.mask_retired_alleles:
                 genotype = self.convert_retired_alleles(genotype)
-            if self.caller in {"Aldy", "Cyrius"} and genotype not in BAD_GENOTYPES:
+            if self.caller in {"aldy", "cyrius"} and genotype not in BAD_GENOTYPES:
                 genotype = self.remove_subs(genotype)
 
             genotype = self.parse_genotype(genotype)
@@ -364,9 +366,9 @@ class CYP2D6Genotype:
         # *4N.ALDY -> *4
         # *141.1001 -> *141
         # *2+42129056.C>G -> *2
-        if self.caller == "Aldy":
+        if self.caller == "aldy":
             pattern = r"\.\d{3,4}|[A-Z]|\+rs\d+|:2|\.ALDY(?:_2)?|\+\d+\.[ACGT]>[ACGT]"
-        elif self.caller == "Cyrius":
+        elif self.caller == "cyrius":
             pattern = r"\.\d{3}"
         return re.sub(pattern, "", genotype)
 
