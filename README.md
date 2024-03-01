@@ -6,7 +6,7 @@ Current tool outputs supported:
 1. Aldy
 1. Cyrius
 1. PyPGx
-1. Stargazer
+1. Stargazer - In Progress
 1. StellarPGx
 
 
@@ -58,7 +58,7 @@ python3 -m cyp2d6_parser phenotype --activity_score 2
 ## Interpreting output from parse_genotype
 
 1. sample_id - File name or left blank
-1. genotype_raw - Genotype(s) used as input, semicolon delimited
+1. genotype_raw - Genotype(s) used as input
 1. genotype - Parsed and organized genotype according to PharmVar reccomendations. Retired alleles are converted to the new allele name (Ex: *57 -> *36). If you would like to report retired alleles, an option is available. Suballeles names are removed (Ex: *4.001 -> *4). If a single genotype cannot be resolved, Indeterminate/Indeterminate is reported.
 1. activity_score - Total activity score for the reported genotype
 1. phenotype - Phenotype based on activity score

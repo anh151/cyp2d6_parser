@@ -59,17 +59,19 @@ class CYP2D6Data:
     @classmethod
     def from_aldy(cls, file, mask_retired_alleles=True):
         caller = "aldy"
-        with open(file) as f:
-            csv_reader = csv.reader(f, delimiter="\t")
-            genotypes_raw = set()
-            for i, line in enumerate(csv_reader):
-                if i > 1:
-                    genotype = line[3]
-                    genotypes_raw.add(genotype)
         if os.path.getsize(file) == 0:
             # Couldn't call the sample
             genotypes_raw = {"Indeterminate/Indeterminate"}
-        elif len(genotypes_raw) == 0:
+        else:
+            with open(file) as f:
+                csv_reader = csv.reader(f, delimiter="\t")
+                genotypes_raw = set()
+                for i, line in enumerate(csv_reader):
+                    if "Sample" in line[0] or "Solution" in line[0]:
+                        continue
+                    genotype = line[3]
+                    genotypes_raw.add(genotype)
+        if len(genotypes_raw) == 0:
             # https://github.com/0xTCG/aldy/issues/45#issuecomment-1368169564
             genotypes_raw = {"*5/*5"}
         return cls(
