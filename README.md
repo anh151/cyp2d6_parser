@@ -60,7 +60,9 @@ python3 -m cyp2d6_parser phenotype --activity_score 2
 1. sample_id - File name or left blank
 1. genotype_raw - Genotype(s) used as input
 1. genotype - Parsed and organized genotype according to PharmVar reccomendations. Retired alleles are converted to the new allele name (Ex: *57 -> *36). If you would like to report retired alleles, an option is available. Suballeles names are removed (Ex: *4.001 -> *4). If a single genotype cannot be resolved, Indeterminate/Indeterminate is reported.
-1. activity_score - Total activity score for the reported genotype
+1. activity_score - Total activity score for the reported genotype. Activity score may contain >= values if the genotype contains allele(s) with unknown activity.
+    - genotype: \*1/\*106
+    - activity_score: CYP2D6 Activity Score >= 1.0
 1. phenotype - Phenotype based on activity score
 1. copy_number - Total number of copies in genotype only if the genotype is not Indeterminate. The only allele which does not count towards total copy number is *5 (gene deletion).
 1. possible_genotype - If the input genotypes cannot be resolved to a single genotype, all possible genotypes are reported in this field as semicolon delimited.
