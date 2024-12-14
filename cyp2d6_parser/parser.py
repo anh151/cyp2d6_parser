@@ -12,6 +12,7 @@ from .utils import (
     validate_genotype,
     write_output,
 )
+from tqdm import tqdm
 
 
 def parse_genotype(
@@ -57,7 +58,7 @@ def parse_genotype(
     if file or dir_:
         genotype_results = []
         func = getattr(CYP2D6Data, f"from_{caller.lower()}")
-        for genotype_file in files:
+        for genotype_file in tqdm(files):
             genotype_result = func(
                 genotype_file,
                 mask_retired_alleles=mask_retired_alleles,
